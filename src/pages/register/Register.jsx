@@ -1,0 +1,126 @@
+import { Link , useNavigate} from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import "./register.css"
+const Register = () => {
+    const [data, setData] = useState({
+		username: "",
+		email: "",
+		country: "",
+		img: "",
+		city: "",
+		phone: "",
+		password: "",
+	});
+	const [error, setError] = useState("");
+	const navigate = useNavigate();
+
+	const handleChange = ({ currentTarget: input }) => {
+		setData({ ...data, [input.name]: input.value });
+	};
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			const url = "http://localhost:4000/api/auth/register";
+			const { data: res } = await axios.post(url, data);
+			navigate("/login");
+			console.log(res.message);
+		} catch (error) {
+			if (
+				error.response &&
+				error.response.status >= 400 &&
+				error.response.status <= 500
+			) {
+				setError(error.response.data.message);
+			}
+		}
+	};
+  return (
+    <div className="signup_container">
+			<div className="signup_form_container">
+				<div className="left">
+					<h1>Welcome Back</h1>
+					<Link to="/login">
+						<button type="button" className="white_btn">
+							Sing in
+						</button>
+					</Link>
+				</div>
+				<div className="right">
+					<form className="form_container" onSubmit={handleSubmit}>
+						<h1>Create Account</h1>
+						<input
+							type="text"
+							placeholder="username"
+							name="username"
+							onChange={handleChange}
+							value={data.username}
+							required
+							className="input"
+						/>
+						<input
+							type="email"
+							placeholder="Email"
+							name="email"
+							onChange={handleChange}
+							value={data.email}
+							required
+							className="input"
+						/>
+						<input
+							type="text"
+							placeholder="country"
+							name="country"
+							onChange={handleChange}
+							value={data.country}
+							required
+							className="input"
+						/>
+						<input
+							type="test"
+							placeholder="image"
+							name="img"
+							onChange={handleChange}
+							value={data.img}
+							required
+							className="input"
+						/>
+						<input
+							type="text"
+							placeholder="city"
+							name="city"
+							onChange={handleChange}
+							value={data.city}
+							required
+							className="input"
+						/>
+						<input
+							type="text"
+							placeholder="phone"
+							name="phone"
+							onChange={handleChange}
+							value={data.phone}
+							required
+							className="input"
+						/>
+						<input
+							type="password"
+							placeholder="Password"
+							name="password"
+							onChange={handleChange}
+							value={data.password}
+							required
+							className="input"
+						/>
+						{error && <div className="error_msg">{error}</div>}
+						<button type="submit" className="green_btn">
+							Sing Up
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	);
+};
+export default Register
